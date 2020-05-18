@@ -8,10 +8,10 @@ from litex.build.generic_platform import *
 from litex.build.lattice import LatticePlatform
 from litex.build.lattice.programmer import OpenOCDJTAGProgrammer
 
-# IOs ----------------------------------------------------------------------------------------------
+# IOs ------------------------------------------------------------------------
 
 
-_io_v7_1 = [ # Documented by @miek
+_io_v7_1 = [  # Documented by @miek
     # clock
     ("clk25", 0, Pins("P6"), IOStandard("LVCMOS33")),
 

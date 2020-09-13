@@ -1,6 +1,9 @@
-# This file is Copyright (c) 2020 David Shah <dave@ds0.me>
-# This file is Copyright (c) 2020 Florent Kermarrec <florent@enjoy-digital.fr>
-# License: BSD
+#
+# This file is part of LiteX-Boards.
+#
+# Copyright (c) 2020 David Shah <dave@ds0.me>
+# Copyright (c) 2020 Florent Kermarrec <florent@enjoy-digital.fr>
+# SPDX-License-Identifier: BSD-2-Clause
 
 # Note: This platform should also be applicable to the Alveo U200, VCU1525, BCU1525 and other
 # 1525 variants.
@@ -272,6 +275,17 @@ _io = [
             "AP7 AR9 AT7 AU9 AV7 BB5 BD5 BF5")),
     ),
 
+    # pcie
+    ("pcie_x4", 0,
+        Subsignal("rst_n", Pins("BD21"), IOStandard("LVCMOS12")),
+        Subsignal("clk_n", Pins("AM10")),
+        Subsignal("clk_p", Pins("AM11")),
+        Subsignal("rx_n",  Pins("AF1 AG3 AH1 AJ3")),
+        Subsignal("rx_p",  Pins("AF2 AG4 AH2 AJ4")),
+        Subsignal("tx_n",  Pins("AF6 AG8 AH6 AJ8")),
+        Subsignal("tx_p",  Pins("AF7 AG9 AH7 AJ9")),
+    ),
+
     # qsfp28
     ("qsfp28", 0,
         Subsignal("clk_n", Pins("K10")),
@@ -323,6 +337,10 @@ class Platform(XilinxPlatform):
 
     def do_finalize(self, fragment):
         XilinxPlatform.do_finalize(self, fragment)
+        self.add_period_constraint(self.lookup_request("clk300", 0, loose=True), 1e9/300e6)
+        self.add_period_constraint(self.lookup_request("clk300", 1, loose=True), 1e9/300e6)
+        self.add_period_constraint(self.lookup_request("clk300", 2, loose=True), 1e9/300e6)
+        self.add_period_constraint(self.lookup_request("clk300", 3, loose=True), 1e9/300e6)
         # For passively cooled boards, overheating is a significant risk if airflow isn't sufficient
         self.add_platform_command("set_property BITSTREAM.CONFIG.OVERTEMPSHUTDOWN ENABLE [current_design]")
         # Reduce programming time
